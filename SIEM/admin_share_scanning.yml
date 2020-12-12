@@ -1,0 +1,26 @@
+title: ADMIN$ Share Enumeration
+id: 45642ce1-55a4-450d-ac05-c0fb0331ab8c
+description: Detects attempted access to $ADMIN shares across multiple distinct target hosts
+tags:
+    - attack.lateral_movement
+    - attack.t1021.002
+status: experimental
+author: Michael Music
+date: 2020/12/6
+modified: 2020/12/6
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 5140
+        ShareName: Admin$
+    filter:
+        SubjectUserName: '*$'
+    timeframe: 5m
+    condition: selection and not filter | count(DestinationAddress) by SourceAddress, SubjectUserName > 20
+falsepositives:
+    - Legitimate administrative activity
+    - Vulnerability scanners
+    - Penetration testing
+level: medium

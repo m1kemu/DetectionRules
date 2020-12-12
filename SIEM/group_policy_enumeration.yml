@@ -1,0 +1,25 @@
+title: Group Policy File Enumeration
+id: e1afb0a3-6327-4b39-ac40-3ec688ed59c2
+description: Detects multiple attempts from a single user to access group-policy related files on a SYSVOL share within a short time period.
+author: Michael Music
+date: 2020/12/06
+tags:
+    - attack.unsecured_credentials
+    - attack.T1552.006
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID:
+            - 4656
+        ObjectName: 'C:\AD\SYSVOL\domain\Policies\*'
+    filter:
+        UserName: "*$"
+    timeframe: 1h
+    condition:
+        - selection and not filter | count(ObjectName) by AccountName, DestIP > 20
+falsepositives:
+    - Vulnerability scanners
+    - Penetration testing
+level: low

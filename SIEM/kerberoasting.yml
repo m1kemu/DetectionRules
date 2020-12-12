@@ -1,0 +1,29 @@
+title: Kerberoasting
+id: 332936f1-d385-4e32-9159-75b569593ee7
+description: Detects a large number of Kerberos service ticket requests indicative of Kerberoasting activity
+author: Michael Music
+date: 2020/12/06
+tags:
+    - attack.credential_access
+    - attack.t1558.003
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID:
+            - 4769
+    filter1:
+        ServiceName: "krbtgt"
+        ServiceName: "*$"
+    filter2:
+        TicketEncryptionType: "0x17"
+        FailureCode: "0x0"
+    timeframe: 10m
+    condition:
+        - selection and filter2 and not filter1 | count(ServiceName) by AccountName > 10
+falsepositives:
+    - Vulnerability scanners
+    - Penetration testing
+    - Users accessing a large number of unique services
+level: low

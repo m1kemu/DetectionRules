@@ -1,0 +1,26 @@
+title: Mass Share Enumeration
+id: 40a722fd-b466-4eeb-81d4-dcbf981a0f59
+description: Detects attempted access to a shares across multiple target hosts.
+tags:
+    - attack.discovery
+    - attack.t1083
+status: experimental
+author: Michael Music
+date: 2020/12/6
+modified: 2020/12/6
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 5140
+    filter:
+        ShareName: '*$'
+    timeframe: 5m
+    condition: selection and not filter | count(DestinationAddress) by SourceAddress, SubjectUserName > 20
+falsepositives:
+    - Legitimate administrative activity
+    - Misconfigured accounts (service or otherwise)
+    - Vulnerability scanners
+    - Penetration testing
+level: medium

@@ -1,0 +1,4 @@
+alert tcp any any -> any 389 (msg:"LDAP search - SPNs"; content:"servicePrincipalName=*"; nocase; reference:url,https://attack.mitre.org/techniques/T1087/002/; classtype:network-scan; rev:1;)
+alert tcp any any -> any 389 (msg:"LDAP search - Users requiring password change"; content:"(objectCategory=user)(pwdLastSet=0)"; nocase; reference:url,https://attack.mitre.org/techniques/T1087/002/; classtype:network-scan; rev:1;)
+alert tcp any any -> any 389 (msg:"LDAP search - Passwords in description"; content:"description=*password*"; nocase; reference:url,https://attack.mitre.org/techniques/T1087/002/; classtype:network-scan; rev:1;)
+alert tcp any any -> any 389 (msg:"LDAP search - Users without expiring passwords"; content:"userAccountControl|3A|1.2.840.113556.1.4.803|3A|=65536"; nocase; reference:url,https://attack.mitre.org/techniques/T1087/002/; classtype:network-scan; rev:1;)

@@ -1,0 +1,26 @@
+title: Single Host Share Enumeration
+id: 02a7122b-deba-4424-bc7e-8b2644545fff
+description: Detects attempted access to a number of shares on one host.
+tags:
+    - attack.discovery
+    - attack.t1083
+status: experimental
+author: Michael Music
+date: 2020/12/6
+modified: 2020/12/6
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 5140
+    filter:
+        ShareName: '*$'
+    timeframe: 5m
+    condition: selection and not filter | count(ShareName) by SourceAddress, SubjectUserName > 3
+falsepositives:
+    - Legitimate administrative activity
+    - Misconfigured accounts (service or otherwise)
+    - Vulnerability scanners
+    - Penetration testing
+level: low
